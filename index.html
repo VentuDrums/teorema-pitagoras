@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teorema de Pitágoras - 1º ESO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #fef2f2; /* Light red/rose background */
+            color: #1f2937;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type=range] {
+            accent-color: #dc2626; /* Red-600 */
+        }
+
+        /* Mantengo el verde para correcto y rojo para incorrecto en el quiz por usabilidad universal */
+        .correct { background-color: #d1fae5; border-color: #10b981; }
+        .incorrect { background-color: #fee2e2; border-color: #ef4444; }
+        
+        /* SVG Styling */
+        .svg-cateto { stroke: #dc2626; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+        .svg-hipotenusa { stroke: #ea580c; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+        .svg-angle { fill: none; stroke: #dc2626; stroke-width: 2; }
+        .svg-text { font-weight: bold; font-family: 'Nunito', sans-serif; font-size: 16px; fill: #1f2937; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-red-600 text-white shadow-md p-4">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <!-- Icono de triángulo rectángulo -->
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21H3V3l18 18z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 18h3v3" />
+                </svg>
+                MateLab: Pitágoras
+            </h1>
+            <span class="bg-red-800 px-3 py-1 rounded-full text-sm font-semibold tracking-wide">1º ESO</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-8">
+        <div class="max-w-4xl w-full glass-card rounded-2xl p-6 sm:p-10 relative overflow-hidden">
+            
+            <!-- Progress Bar -->
+            <div class="absolute top-0 left-0 w-full h-2 bg-gray-200">
+                <div id="progress-bar" class="h-full bg-red-500 transition-all duration-500" style="width: 25%;"></div>
+            </div>
+
+            <!-- SCREEN 1: Inicio -->
+            <section id="screen-inicio" class="screen active text-center">
+                <div class="mb-8">
+                    <svg class="w-48 h-48 mx-auto text-red-500" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="40,160 160,160 40,40" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+                        <polyline points="40,135 65,135 65,160" stroke="currentColor" stroke-width="4"/>
+                        <circle cx="52.5" cy="147.5" r="3" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h2 class="text-4xl font-extrabold text-gray-800 mb-4">El Teorema de Pitágoras</h2>
+                <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                    ¡Hola! Hoy vamos a descubrir uno de los teoremas más famosos y útiles de las matemáticas. 
+                    Aprenderás el secreto que esconde cada triángulo rectángulo.
+                </p>
+                <button onclick="goToScreen('screen-repaso', 50)" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105">
+                    ¡Empezar Aventura!
+                </button>
+            </section>
+
+            <!-- SCREEN 2: Repaso (Teoría) -->
+            <section id="screen-repaso" class="screen">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-4 border-red-500 inline-block pb-2">¿Qué nos dice el Teorema?</h2>
+                
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <p class="text-lg text-gray-700 mb-4">
+                            Este teorema solo funciona en los <strong>triángulos rectángulos</strong> (los que tienen un ángulo recto de 90º).
+                        </p>
+                        <div class="bg-orange-50 border-l-4 border-orange-500 p-4 mb-4 rounded-r-lg">
+                            <p class="font-semibold text-orange-900">
+                                "En todo triángulo rectángulo, el cuadrado de la hipotenusa es igual a la suma de los cuadrados de los catetos."
+                            </p>
+                        </div>
+                        <p class="text-lg text-gray-700">
+                            Los <strong>catetos</strong> son los lados que forman el ángulo recto, y la <strong>hipotenusa</strong> es el lado más largo, el que está enfrente del ángulo recto.
+                        </p>
+                        <div class="mt-6 text-center text-2xl font-bold text-red-700 bg-red-50 py-3 rounded-lg border border-red-200">
+                            h² = a² + b²
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-xl flex justify-center border border-gray-200 shadow-inner relative">
+                        <svg width="250" height="250" viewBox="0 0 250 250">
+                            <!-- Catetos -->
+                            <polyline points="40,40 40,210 210,210" class="svg-cateto" fill="none" />
+                            <!-- Ángulo recto -->
+                            <polyline points="40,180 70,180 70,210" class="svg-angle" />
+                            <circle cx="55" cy="195" r="3" fill="#dc2626"/>
+                            <!-- Hipotenusa -->
+                            <line x1="40" y1="40" x2="210" y2="210" class="svg-hipotenusa" />
+                            
+                            <!-- Etiquetas -->
+                            <text x="110" y="240" class="svg-text text-red-600">Cateto a</text>
+                            <text x="10" y="140" class="svg-text text-red-600" transform="rotate(-90 20 140)">Cateto b</text>
+                            <text x="145" y="110" class="svg-text fill-orange-600" transform="rotate(45 145 110)">Hipotenusa h</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="goToScreen('screen-inicio', 25)" class="text-gray-500 hover:text-gray-800 font-semibold py-2 px-6 rounded-full border border-gray-300 transition">
+                        Atrás
+                    </button>
+                    <button onclick="goToScreen('screen-interactivo', 75)" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full shadow transition">
+                        ¡Probar Interactive! ➜
+                    </button>
+                </div>
+            </section>
+
+            <!-- SCREEN 3: Interactivo -->
+            <section id="screen-interactivo" class="screen">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2 border-b-4 border-red-500 inline-block pb-2">Calculadora Visual</h2>
+                <p class="text-gray-600 mb-6">Elige qué quieres calcular y mueve los deslizadores. ¡El triángulo cambiará de tamaño para ajustarse a los valores reales!</p>
+
+                <div class="grid md:grid-cols-2 gap-8 bg-white p-6 rounded-xl border shadow-sm">
+                    <!-- Controles -->
+                    <div class="space-y-4">
+                        <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                            <label class="block text-gray-800 font-bold mb-2">¿Qué lado falta?</label>
+                            <select id="calc-mode" class="w-full p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-red-500 outline-none text-gray-700">
+                                <option value="h">Calcular Hipotenusa (h)</option>
+                                <option value="a">Calcular Cateto base (a)</option>
+                                <option value="b">Calcular Cateto altura (b)</option>
+                            </select>
+                        </div>
+
+                        <div id="container-a" class="bg-gray-50 p-4 rounded-lg border">
+                            <label class="block text-gray-700 font-bold mb-2 flex justify-between">
+                                <span>Cateto a (Base):</span>
+                                <span id="val-a-text" class="text-red-600">3</span>
+                            </label>
+                            <input type="range" id="slider-a" min="1" max="20" step="1" value="3" class="w-full">
+                        </div>
+                        
+                        <div id="container-b" class="bg-gray-50 p-4 rounded-lg border">
+                            <label class="block text-gray-700 font-bold mb-2 flex justify-between">
+                                <span>Cateto b (Altura):</span>
+                                <span id="val-b-text" class="text-red-600">4</span>
+                            </label>
+                            <input type="range" id="slider-b" min="1" max="20" step="1" value="4" class="w-full">
+                        </div>
+
+                        <div id="container-h" class="bg-gray-50 p-4 rounded-lg border hidden">
+                            <label class="block text-gray-700 font-bold mb-2 flex justify-between">
+                                <span>Hipotenusa (h):</span>
+                                <span id="val-h-text" class="text-orange-600">5</span>
+                            </label>
+                            <input type="range" id="slider-h" min="1" max="28" step="1" value="5" class="w-full">
+                            <p id="h-warning" class="text-xs text-red-500 mt-1 hidden">La hipotenusa debe ser siempre mayor que los catetos.</p>
+                        </div>
+
+                        <div class="bg-red-50 p-4 rounded-lg border-2 border-red-300 text-center relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-2 h-full bg-red-500"></div>
+                            <p id="calc-title" class="text-sm text-gray-600 font-bold uppercase tracking-wide">Cálculo de la Hipotenusa</p>
+                            <p id="calc-formula" class="text-lg font-bold text-gray-700 mt-2">h = √(a² + b²)</p>
+                            <p class="text-3xl font-extrabold text-red-700 mt-2" id="calc-result">h = 5</p>
+                        </div>
+                    </div>
+
+                    <!-- Representación SVG -->
+                    <div class="flex items-center justify-center relative bg-gray-50 rounded-lg border p-4">
+                        <svg width="250" height="250" viewBox="0 0 250 250">
+                            <!-- Triángulo dinámico -->
+                            <polygon id="svg-triangle-fill" points="40,210 40,210 40,210" fill="#fee2e2" fill-opacity="0.5" stroke="none" />
+                            
+                            <!-- Ángulo recto (dinámico) -->
+                            <polyline id="svg-angle" points="40,180 70,180 70,210" class="svg-angle" />
+                            
+                            <!-- Catetos (Líneas separadas para facilitar animación/cambio) -->
+                            <line id="svg-line-b" x1="40" y1="210" x2="40" y2="210" class="svg-cateto" />
+                            <line id="svg-line-a" x1="40" y1="210" x2="40" y2="210" class="svg-cateto" />
+                            
+                            <!-- Hipotenusa -->
+                            <line id="svg-line-h" x1="40" y1="210" x2="40" y2="210" class="svg-hipotenusa" />
+                            
+                            <!-- Badges de valores -->
+                            <g id="badge-a">
+                                <rect id="rect-a" x="0" y="0" width="40" height="24" rx="4" fill="#dc2626" />
+                                <text id="svg-val-a" x="20" y="17" fill="white" font-weight="bold" font-family="Nunito" font-size="14px" text-anchor="middle">3</text>
+                            </g>
+                            
+                            <g id="badge-b">
+                                <rect id="rect-b" x="0" y="0" width="40" height="24" rx="4" fill="#dc2626" />
+                                <text id="svg-val-b" x="20" y="17" fill="white" font-weight="bold" font-family="Nunito" font-size="14px" text-anchor="middle">4</text>
+                            </g>
+
+                            <g id="badge-h">
+                                <rect id="rect-h" x="0" y="0" width="50" height="26" rx="4" fill="#ea580c" />
+                                <text id="svg-val-h" x="25" y="18" fill="white" font-weight="bold" font-family="Nunito" font-size="15px" text-anchor="middle">5</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="goToScreen('screen-repaso', 50)" class="text-gray-500 hover:text-gray-800 font-semibold py-2 px-6 rounded-full border border-gray-300 transition">
+                        Atrás
+                    </button>
+                    <button onclick="goToScreen('screen-quiz', 100); startQuiz();" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-6 rounded-full shadow transition">
+                        ¡A por el Quiz final! 🏆
+                    </button>
+                </div>
+            </section>
+
+            <!-- SCREEN 4: Quiz -->
+            <section id="screen-quiz" class="screen">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2 border-b-4 border-orange-500 inline-block pb-2">Ponte a prueba</h2>
+                <p class="text-gray-600 mb-6">Demuestra lo que has aprendido sobre el Teorema de Pitágoras.</p>
+
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Quiz content injected by JS -->
+                </div>
+
+                <div id="quiz-results" class="hidden mt-8 text-center bg-orange-50 p-6 rounded-xl border border-orange-200">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">¡Completado!</h3>
+                    <p class="text-lg text-gray-700 mb-4">Tu puntuación es: <span id="score-display" class="font-extrabold text-orange-600 text-3xl"></span></p>
+                    <button onclick="goToScreen('screen-inicio', 25)" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-8 rounded-full shadow transition">
+                        Volver a empezar
+                    </button>
+                </div>
+
+                <div class="mt-8 flex justify-start" id="quiz-back-btn">
+                    <button onclick="goToScreen('screen-interactivo', 75)" class="text-gray-500 hover:text-gray-800 font-semibold py-2 px-6 rounded-full border border-gray-300 transition">
+                        Atrás a la Calculadora
+                    </button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="text-center p-4 text-red-800 font-medium">
+        App Educativa - Matemáticas 1º ESO
+    </footer>
+
+    <script>
+        // --- Navigation Logic ---
+        function goToScreen(screenId, progress) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            document.getElementById('progress-bar').style.width = progress + '%';
+        }
+
+        // --- Interactive Logic ---
+        const modeSelect = document.getElementById('calc-mode');
+        
+        const sliderA = document.getElementById('slider-a');
+        const sliderB = document.getElementById('slider-b');
+        const sliderH = document.getElementById('slider-h');
+        
+        const containerA = document.getElementById('container-a');
+        const containerB = document.getElementById('container-b');
+        const containerH = document.getElementById('container-h');
+        
+        const valAText = document.getElementById('val-a-text');
+        const valBText = document.getElementById('val-b-text');
+        const valHText = document.getElementById('val-h-text');
+        const warningH = document.getElementById('h-warning');
+        
+        const calcTitle = document.getElementById('calc-title');
+        const calcFormula = document.getElementById('calc-formula');
+        const calcResult = document.getElementById('calc-result');
+        
+        const svgValA = document.getElementById('svg-val-a');
+        const svgValB = document.getElementById('svg-val-b');
+        const svgValH = document.getElementById('svg-val-h');
+        
+        // Elementos del SVG
+        const triangleFill = document.getElementById('svg-triangle-fill');
+        const lineA = document.getElementById('svg-line-a');
+        const lineB = document.getElementById('svg-line-b');
+        const lineH = document.getElementById('svg-line-h');
+        const svgAngle = document.getElementById('svg-angle');
+        const badgeA = document.getElementById('badge-a');
+        const badgeB = document.getElementById('badge-b');
+        const badgeH = document.getElementById('badge-h');
+
+        function updateInteractive() {
+            const mode = modeSelect.value;
+            let a, b, h;
+
+            // Manejar visibilidad y matemáticas según el modo
+            if (mode === 'h') {
+                containerA.classList.remove('hidden');
+                containerB.classList.remove('hidden');
+                containerH.classList.add('hidden');
+                warningH.classList.add('hidden');
+                
+                a = parseFloat(sliderA.value);
+                b = parseFloat(sliderB.value);
+                h = Math.sqrt((a * a) + (b * b));
+                
+                calcTitle.textContent = "Cálculo de la Hipotenusa";
+                calcFormula.textContent = "h = √(a² + b²)";
+                calcResult.textContent = `h = ${Number.isInteger(h) ? h : h.toFixed(2)}`;
+                calcResult.className = "text-3xl font-extrabold text-orange-600 mt-2";
+            } 
+            else if (mode === 'a') {
+                containerA.classList.add('hidden');
+                containerB.classList.remove('hidden');
+                containerH.classList.remove('hidden');
+                
+                b = parseFloat(sliderB.value);
+                h = parseFloat(sliderH.value);
+                
+                // Forzar que la hipotenusa sea mayor que el cateto
+                if (h <= b) {
+                    warningH.classList.remove('hidden');
+                    h = b + 1;
+                    sliderH.value = h;
+                } else {
+                    warningH.classList.add('hidden');
+                }
+                
+                a = Math.sqrt((h * h) - (b * b));
+                
+                calcTitle.textContent = "Cálculo del Cateto base (a)";
+                calcFormula.textContent = "a = √(h² - b²)";
+                calcResult.textContent = `a = ${Number.isInteger(a) ? a : a.toFixed(2)}`;
+                calcResult.className = "text-3xl font-extrabold text-red-600 mt-2";
+            }
+            else if (mode === 'b') {
+                containerA.classList.remove('hidden');
+                containerB.classList.add('hidden');
+                containerH.classList.remove('hidden');
+                
+                a = parseFloat(sliderA.value);
+                h = parseFloat(sliderH.value);
+                
+                // Forzar que la hipotenusa sea mayor que el cateto
+                if (h <= a) {
+                    warningH.classList.remove('hidden');
+                    h = a + 1;
+                    sliderH.value = h;
+                } else {
+                    warningH.classList.add('hidden');
+                }
+                
+                b = Math.sqrt((h * h) - (a * a));
+                
+                calcTitle.textContent = "Cálculo del Cateto altura (b)";
+                calcFormula.textContent = "b = √(h² - a²)";
+                calcResult.textContent = `b = ${Number.isInteger(b) ? b : b.toFixed(2)}`;
+                calcResult.className = "text-3xl font-extrabold text-red-600 mt-2";
+            }
+            
+            // Actualizar textos de los deslizadores
+            valAText.textContent = Number.isInteger(a) ? a : a.toFixed(1);
+            valBText.textContent = Number.isInteger(b) ? b : b.toFixed(1);
+            valHText.textContent = Number.isInteger(h) ? h : h.toFixed(1);
+
+            // -- DIBUJO DINÁMICO DEL SVG --
+            const originX = 40;
+            const originY = 210;
+            const maxPx = 180; // Píxeles máximos para el lado más largo (basado en h max = ~28)
+            const scale = maxPx / 28; // Escala constante para que el tamaño cambie visualmente
+
+            // Coordenadas
+            const p1x = originX;
+            const p1y = originY - (b * scale); // Punto superior
+            
+            const p2x = originX + (a * scale); // Punto derecho
+            const p2y = originY;
+
+            // Polígono relleno
+            triangleFill.setAttribute('points', `${originX},${originY} ${p2x},${p2y} ${p1x},${p1y}`);
+            
+            // Líneas de los lados
+            lineA.setAttribute('x1', originX);
+            lineA.setAttribute('y1', originY);
+            lineA.setAttribute('x2', p2x);
+            lineA.setAttribute('y2', originY);
+            
+            lineB.setAttribute('x1', originX);
+            lineB.setAttribute('y1', originY);
+            lineB.setAttribute('x2', originX);
+            lineB.setAttribute('y2', p1y);
+            
+            lineH.setAttribute('x1', p1x);
+            lineH.setAttribute('y1', p1y);
+            lineH.setAttribute('x2', p2x);
+            lineH.setAttribute('y2', p2y);
+            
+            // Marca del ángulo recto
+            let angleSize = 15;
+            if (a * scale < 20 || b * scale < 20) angleSize = Math.min(a*scale, b*scale) * 0.5;
+            svgAngle.setAttribute('points', `${originX},${originY - angleSize} ${originX + angleSize},${originY - angleSize} ${originX + angleSize},${originY}`);
+
+            // Textos en las etiquetas (badges)
+            svgValA.textContent = Number.isInteger(a) ? a : a.toFixed(1);
+            svgValB.textContent = Number.isInteger(b) ? b : b.toFixed(1);
+            svgValH.textContent = Number.isInteger(h) ? h : h.toFixed(1);
+
+            // Posicionamiento de las etiquetas
+            badgeA.setAttribute('transform', `translate(${originX + (a*scale)/2 - 20}, ${originY + 10})`);
+            badgeB.setAttribute('transform', `translate(${originX - 35}, ${originY - (b*scale)/2 - 12})`);
+            
+            // Etiqueta H (rotada y alineada)
+            const hCenterX = originX + (a * scale) / 2;
+            const hCenterY = originY - (b * scale) / 2;
+            const angleRad = Math.atan2(p2y - p1y, p2x - p1x);
+            const angleDeg = angleRad * (180 / Math.PI);
+            
+            badgeH.setAttribute('transform', `translate(${hCenterX - 25}, ${hCenterY - 30}) rotate(${angleDeg}, 25, 13)`);
+        }
+
+        // Event listeners
+        modeSelect.addEventListener('change', updateInteractive);
+        sliderA.addEventListener('input', updateInteractive);
+        sliderB.addEventListener('input', updateInteractive);
+        sliderH.addEventListener('input', updateInteractive);
+
+        // --- Quiz Logic ---
+        const quizData = [
+            {
+                question: "¿En qué tipo de triángulos podemos aplicar el Teorema de Pitágoras?",
+                options: ["Triángulos equiláteros", "Triángulos rectángulos", "Triángulos isósceles"],
+                correct: 1
+            },
+            {
+                question: "¿Cuál es la fórmula matemática del Teorema de Pitágoras?",
+                options: ["a + b = h", "a² + b² = h²", "a² - b² = h²"],
+                correct: 1
+            },
+            {
+                question: "Si los catetos de un triángulo miden 3 cm y 4 cm, ¿cuánto mide la hipotenusa?",
+                options: ["7 cm", "6 cm", "5 cm"],
+                correct: 2
+            }
+        ];
+
+        let selectedAnswers = new Array(quizData.length).fill(null);
+
+        function startQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            document.getElementById('quiz-results').classList.add('hidden');
+            document.getElementById('quiz-back-btn').classList.remove('hidden');
+            selectedAnswers = new Array(quizData.length).fill(null);
+
+            quizData.forEach((q, index) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'bg-white p-6 rounded-xl border shadow-sm';
+                
+                const qTitle = document.createElement('h3');
+                qTitle.className = 'font-bold text-lg text-gray-800 mb-4';
+                qTitle.textContent = `${index + 1}. ${q.question}`;
+                qDiv.appendChild(qTitle);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'grid gap-3';
+
+                q.options.forEach((opt, optIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'text-left w-full p-3 rounded-lg border border-gray-200 hover:bg-red-50 transition quiz-opt-btn';
+                    btn.textContent = opt;
+                    btn.onclick = () => selectOption(index, optIndex, btn, qDiv);
+                    optionsGrid.appendChild(btn);
+                });
+
+                qDiv.appendChild(optionsGrid);
+                container.appendChild(qDiv);
+            });
+
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'mt-6 w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-xl shadow transition';
+            submitBtn.textContent = 'Comprobar Respuestas';
+            submitBtn.onclick = checkQuiz;
+            container.appendChild(submitBtn);
+        }
+
+        function selectOption(qIndex, optIndex, btn, container) {
+            selectedAnswers[qIndex] = optIndex;
+            // Reset styles for this question's buttons
+            const buttons = container.querySelectorAll('.quiz-opt-btn');
+            buttons.forEach(b => {
+                b.classList.remove('ring-2', 'ring-red-500', 'bg-red-50', 'border-red-500');
+            });
+            // Apply selected style
+            btn.classList.add('ring-2', 'ring-red-500', 'bg-red-50', 'border-red-500');
+        }
+
+        function checkQuiz() {
+            // Check if all answered
+            if (selectedAnswers.includes(null)) {
+                alert("Por favor, responde a todas las preguntas antes de comprobar.");
+                return;
+            }
+
+            let score = 0;
+            const container = document.getElementById('quiz-container');
+            const questionsDivs = container.querySelectorAll('.bg-white'); // Gets the question blocks
+
+            quizData.forEach((q, index) => {
+                const buttons = questionsDivs[index].querySelectorAll('.quiz-opt-btn');
+                const selected = selectedAnswers[index];
+                
+                // Disable buttons
+                buttons.forEach(b => b.disabled = true);
+
+                if (selected === q.correct) {
+                    score++;
+                    buttons[selected].classList.add('correct');
+                    buttons[selected].classList.remove('bg-red-50');
+                } else {
+                    buttons[selected].classList.add('incorrect');
+                    buttons[q.correct].classList.add('correct'); // Show correct one
+                }
+            });
+
+            // Hide submit button, show results
+            container.lastChild.style.display = 'none';
+            document.getElementById('quiz-results').classList.remove('hidden');
+            document.getElementById('quiz-back-btn').classList.add('hidden');
+            document.getElementById('score-display').textContent = `${score} / ${quizData.length}`;
+            
+            // Auto scroll to results
+            document.getElementById('quiz-results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize state
+        updateInteractive();
+
+    </script>
+</body>
+</html>
